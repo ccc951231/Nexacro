@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="OB_001_01" width="400" height="240" titletext="주문수정팝업" onload="OB_001_01_onload">
+    <Layouts>
+      <Layout height="240" mobileorientation="landscape" width="400">
+        <Static id="sta01_00_00" taborder="0" text="주문상태" left="66" top="42" width="84" height="25" onclick="sta01_onclick" font="14px/normal &quot;Gulim&quot;" textAlign="center"/>
+        <Combo id="cbo_ordStatNm" taborder="1" text="" left="185" top="41" width="150" height="30" value="" index="-1" innerdataset="innerdataset" codecolumn="codecolumn" datacolumn="datacolumn" displaynulltext="선택" enable="true">
+          <Dataset id="innerdataset">
+            <ColumnInfo>
+              <Column id="codecolumn" size="256"/>
+              <Column id="datacolumn" size="256"/>
+            </ColumnInfo>
+            <Rows>
+              <Row>
+                <Col id="codecolumn">A</Col>
+                <Col id="datacolumn">주문대기</Col>
+              </Row>
+              <Row>
+                <Col id="codecolumn">B</Col>
+                <Col id="datacolumn">주문접수</Col>
+              </Row>
+              <Row>
+                <Col id="codecolumn">C</Col>
+                <Col id="datacolumn">주문취소</Col>
+              </Row>
+              <Row>
+                <Col id="codecolumn">D</Col>
+                <Col id="datacolumn">설치완료</Col>
+              </Row>
+              <Row>
+                <Col id="codecolumn">E</Col>
+                <Col id="datacolumn">설치취소</Col>
+              </Row>
+            </Rows>
+          </Dataset>
+        </Combo>
+        <Static id="sta01_00_00_00" taborder="2" text="주문상품" left="65" top="81" width="84" height="25" onclick="sta01_onclick" font="14px/normal &quot;Gulim&quot;" textAlign="center"/>
+        <Combo id="cbo_itemNm" taborder="3" text="" left="185" top="80" width="150" height="30" value="" index="-1" innerdataset="innerdataset" codecolumn="codecolumn" datacolumn="datacolumn" displaynulltext="선택" enable="true">
+          <Dataset id="innerdataset">
+            <ColumnInfo>
+              <Column id="codecolumn" size="256"/>
+              <Column id="datacolumn" size="256"/>
+            </ColumnInfo>
+            <Rows>
+              <Row>
+                <Col id="codecolumn">A</Col>
+                <Col id="datacolumn">주문대기</Col>
+              </Row>
+              <Row>
+                <Col id="codecolumn">B</Col>
+                <Col id="datacolumn">주문접수</Col>
+              </Row>
+              <Row>
+                <Col id="codecolumn">C</Col>
+                <Col id="datacolumn">주문취소</Col>
+              </Row>
+              <Row>
+                <Col id="codecolumn">D</Col>
+                <Col id="datacolumn">설치완료</Col>
+              </Row>
+              <Row>
+                <Col id="codecolumn">E</Col>
+                <Col id="datacolumn">설치취소</Col>
+              </Row>
+            </Rows>
+          </Dataset>
+        </Combo>
+        <Button id="btn_chgOrd" taborder="4" text="주문수정" left="45" top="133" width="150" height="65" enable="true" visible="true" onclick="btn_chgOrd_onclick"/>
+        <Button id="btn_exit" taborder="5" text="닫기" left="210" top="133" width="150" height="65" enable="true" visible="true" onclick="btn_exit_onclick"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[
+this.OB_001_01_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	alert("onload 함수 실행");
+};
+
+this.btn_chgOrd_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	 alert("주문 수정 버튼 클릭");
+};
+
+this.btn_exit_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	 alert("닫기 버튼 클릭");
+};
+]]></Script>
+    <Objects>
+      <Dataset id="ds_searchCombo">
+        <ColumnInfo>
+          <Column id="CD_VAL" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="ds_ordStatCombo">
+        <ColumnInfo>
+          <Column id="CD_VAL1" type="STRING" size="256"/>
+          <Column id="CD_NM1" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="ds00"/>
+    </Objects>
+  </Form>
+</FDL>

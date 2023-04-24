@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FDL version="2.1">
+  <Form id="OB_001_01" width="400" height="400" titletext="주문등록팝업" onload="OB_001_01_onload">
+    <Layouts>
+      <Layout height="400" mobileorientation="landscape" width="400">
+        <Static id="sta01_01" taborder="0" text="고객명" left="64" top="42" width="84" height="25" onclick="sta01_onclick" font="14px/normal &quot;Gulim&quot;" textAlign="center"/>
+        <Edit id="edt_custNm" taborder="1" left="182" top="41" width="175" height="30" onchanged="edt00_onchanged"/>
+        <Static id="sta01_01_00" taborder="2" text="휴대폰번호" left="64" top="81" width="84" height="25" onclick="sta01_onclick" font="14px/normal &quot;Gulim&quot;" textAlign="center"/>
+        <Edit id="edt_phone" taborder="3" left="182" top="80" width="175" height="30" onchanged="edt00_onchanged"/>
+        <Static id="sta01_01_01" taborder="4" text="생년월일/사업자번호" left="35" top="119" width="134" height="25" onclick="sta01_onclick" font="14px/normal &quot;Gulim&quot;" textAlign="center"/>
+        <Edit id="edt_birBizNo" taborder="5" left="182" top="118" width="175" height="30" onchanged="edt00_onchanged"/>
+        <Static id="sta01_01_00_00" taborder="6" text="주소" left="63" top="158" width="84" height="25" onclick="sta01_onclick" font="14px/normal &quot;Gulim&quot;" textAlign="center"/>
+        <Edit id="edt_addr" taborder="7" left="182" top="157" width="175" height="30" onchanged="edt00_onchanged"/>
+        <Static id="sta01_00_00" taborder="8" text="고객구분" left="63" top="199" width="84" height="25" onclick="sta01_onclick" font="14px/normal &quot;Gulim&quot;" textAlign="center"/>
+        <Combo id="cbo_custGbNm" taborder="9" text="" left="182" top="198" width="150" height="30" value="" index="-1" innerdataset="ds_custGbCombo" codecolumn="CD_VAL1" datacolumn="CD_NM1" displaynulltext="선택" enable="true" onitemchanged="CustGbNm"/>
+        <Static id="sta01_00_00_00" taborder="10" text="주문상품" left="64" top="238" width="84" height="25" onclick="sta01_onclick" font="14px/normal &quot;Gulim&quot;" textAlign="center"/>
+        <Combo id="cbo_itemNm" taborder="11" text="" left="182" top="237" width="150" height="30" value="" index="-1" innerdataset="ds_itemCombo" codecolumn="CD_VAL1" datacolumn="CD_NM1" displaynulltext="선택" enable="true" onitemchanged="itemCbo"/>
+        <Button id="btn_regOrd" taborder="12" text="주문등록" left="42" top="290" width="150" height="65" enable="true" visible="true" onclick="btn_regOrd_onclick"/>
+        <Button id="btn_exit" taborder="13" text="닫기" left="207" top="290" width="150" height="65" enable="true" visible="true" onclick="btn_exit_onclick"/>
+      </Layout>
+    </Layouts>
+    <Script type="xscript5.1"><![CDATA[
+this.OB_001_01_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
+{
+	 alert("onload 함수 실행");
+	 // 주문 등록을 위한 주문상태, 주문 상품 콤보박스 초기화
+	 // 1. 고객구분 콤보박스에 출력할 데이터들을 TB_CD_MST 체이블로부터 값을 조회해온다.
+	 // 먼저 만들었던 OB_001.xfdl onload 서버 로직을 그대로 사용하면 된다.
+	 // 프론트 코딩을 통해 TB_CD_MST 테이블 select시 where절에 필요한 값을 서버로 넘긴다.
+	 
+	 this.fn_setCustGbCbo(); // 사용자 정의 함수 호출
+	 
+	 // 2. 주문 상품 리스트를 TB_ITEM테이블로부터 조회하여 콤보박스 안의 데이터를 채워준다.
+	 this.fn_setItemCbo();  // 사용자 정의 함수 호출
+};
+
+// 고객 구분 콤보박스 값 호출
+this.fn_setCustGbCbo = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	 trace("고객구분 콤보 박스 세팅");
+	// ds_searchCustGb 데이터셋을 생성하고 서버로 전달할 인자값을 추가
+	this.ds_searchCustGb.clearData();
+	this.ds_searchCustGb.addRow();
+	this.ds_searchCustGb.setColumn(0,"CD_VAL","002"); //고객구분은 코드가 002이다.
+	
+	// 서버로 데이터를 요청하는 부분
+	// 아래 부분은 OB_001.xfdl의 onload부분을 그대로 복사해서 가져온다.
+	
+	var strSvcId = "selectCommonCode"; // 넥사크로에서 transaction을 구분하기 위한 id값이 fnCallback 함수에서 쓰임.
+	var strSvcUrl = "selectCommonCode.do"; // Java Controller에서 이 주소를 식별하여 요청을 처리한다.
+	var inData = "ds_search=ds_searchCustGb"; // 서버(서버와 이름 같아야 함)=프론트 데이터셋
+	
+	var outData = "ds_custGbCombo=ds_commonCode"; // 프론트 데이터셋=서버 (서버에서 넘어온 값 대입)
+	
+	var strArg  = ""; // 데이터셋이 아닌 값을 보낼때 쓰는 필드
+	var callBackFnc = "fnCallback"; // 서버로부터 값을 받은 후 프론트에서 이행할 코드를 fnCallback 함수에서 작성	
+
+	// 넥사크로 N에서 제공하는 서버로 요청하는 공통함수를 쓴다.
+	this.gfnTransaction( strSvcId ,
+						strSvcUrl ,
+						inData ,
+						outData ,
+						strArg ,
+						callBackFnc ); // 세팅한 값을 담아 서버로 데이터 전송
+	
+};
+
+// 주문 상품 콤보박스 값 호출
+this.fn_setItemCbo() = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	alert("나와");
+	// trace("주문상품 콤포박스 세팅");
+	// 주문 상품의 경우 프론트에서 별도로 전송해줘야할 값이 없다.
+	// 서버에서 보내준 값만 받아서 주문상품 콤보박스에 바인딩만 하면된다.
+	
+	var strSvcId = "selectItemList";
+	var strSvcUrl = "selectItemList.do";
+	var inData = ""; // 따로 전송할 데이터가 없음
+	var outData = "ds_itemCombo=ds_itemCombo";
+	var strArg = "";
+	var callBackFnc = "fnCallback";
+	
+	this.gfnTransaction( strSvcId ,
+						strSvcUrl ,
+						inData ,
+						outData ,
+						strArg ,
+						callBackFnc ) // 세팅한 값들을 담아 서버로 데이터 전송
+						 
+};
+this.fnCallback = function(svcID, errorCode, errorMsg)
+{
+	switch(svcID)
+	{
+		case "selectCommonCode":
+			trace("고객구분 콤보박스 세팅 완료");
+			break;
+		case "selectItemList":
+			trace("주문상품 콤보박스 세팅완료");
+			break;
+	}
+};
+
+
+this.btn_regOrd_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	 alert("주문 등록 버튼 클릭");
+	
+	 var oArg = {}; // 팝업을 열 때 부모창에서 가져갈 데이터가 있다면 데이터 세팅
+					// 주문등록시에는 가져갈 데이터가 없으므로 공란으로 지정
+					// ex) paramTitle:"가나다라", paramCode:"abcd", paramNum:12345
+     var oOption = {}; 	// top, left를 지정하지 않으면 가운데 정렬 // "top=20, left=370"
+	 var sPopupCallBack = "fnPopupCallback"; // 팝업창을 닫았을 때 후처리 로직 작성하기 위한 callBack함수 지정
+	 this.gfnOpenPopup("popup","Board::OB_001_01.xfdl",oArg,sPopupCallBack,oOption); // 팝업으로 띄울 화면 지정 후 팝업open
+};
+
+this.btn_exit_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+	 alert("닫기 버튼 클릭");
+};
+
+
+
+
+]]></Script>
+    <Objects>
+      <Dataset id="ds_searchCustGb">
+        <ColumnInfo>
+          <Column id="CD_VAL" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="ds_custGbCombo">
+        <ColumnInfo>
+          <Column id="CD_VAL1" type="STRING" size="256"/>
+          <Column id="CD_NM1" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="ds_itemCombo">
+        <ColumnInfo>
+          <Column id="CD_VAL1" type="STRING" size="256"/>
+          <Column id="CD_NM1" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+    </Objects>
+  </Form>
+</FDL>
