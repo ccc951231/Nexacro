@@ -24,7 +24,9 @@ import com.nexacro.orderBoard.object.Board;
  */
 public interface UidapterBoardService {
 	
-	ArrayList<Map<String, Object>> selectItemList();
+	void insertOrdList(Map<String, Object> ds_regOrd); // 신규 주문 Insert
+	
+	ArrayList<Map<String, Object>> selectItemList(); // 팝업창 주문 상품 콤보박스
 
 	ArrayList<Map<String, Object>> selectOrdList(Map<String, Object> ds_searchList);
 
@@ -37,6 +39,8 @@ public interface UidapterBoardService {
 	void update_datalist(List<Board> boardList);
 
 	void update_datalist_map(List<Map<String, Object>> boardList);
+
+	
 
 
 }

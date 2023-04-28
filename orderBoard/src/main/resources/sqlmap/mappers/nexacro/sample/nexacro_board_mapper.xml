@@ -4,6 +4,57 @@
 
 <mapper namespace="com.nexacro.orderBoard.mapper.UiadapterBoardMapper">
 	
+	
+	<insert id="insertOrd" parameterType="java.util.Map">
+		INSERT INTO TB_ORD(
+			  ORD_NO
+			, ITEM_CD
+			, CUST_CD
+			, ORD_STAT_CD
+			, REG_DT
+			, UPD_DT
+		) VALUES(
+			TO_CHAR(SYSDATE,'YYYYMMDD') || LPAD(ORDER_SEQ.NEXTVAL,4,'0')
+			, #{ITEM_CD}
+			, #{CUST_CD}
+			, 'A' 
+			, SYSDATE
+			, SYSDATE
+		)
+	</insert>
+	
+	<insert id="insertCust" parameterType="java.util.Map">
+		INSERT INTO TB_CUST(
+			CUST_CD
+			, CUST_GBCD
+			, CUST_NM
+			, PHONE
+			, BIRTH
+			, ADDR
+			, REG_DT
+			, UPD_DT
+		) VALUES(
+			CUST_SEQ.NEXTVAL
+			, #{CUST_GBCD}
+			, #{CUST_NM}
+			, #{PHONE}
+			, #{BIR_BIZ_NO}
+			, #{ADDR}
+			, SYSDATE
+			, SYSDATE
+		}
+	</insert>
+	
+	<select id="checkCustDup" parameterType="java.util.Map" resultType="String">
+		SELECT CUST_CD
+		FROM TB_CUST
+		WHERE CUST_GBCD = #{CUST_GBCD}
+		AND CUST_NM = #{CUST_NM}
+		AND PHONE = #{PHONE}
+		AND BIRTH = #{BIR_BIZ_NO}
+		AND ADDR = #{ADDR}
+	</select>
+	
 	<select id="selectItemList" resultType="java.util.Map">
 		SELECT ITEM_CD AS CD_VAL1 
 			,  ITEM_NM AS CD_NM1
