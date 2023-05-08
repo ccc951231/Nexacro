@@ -66,9 +66,8 @@ this.fn_setCustGbCbo = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 };
 
 // 주문 상품 콤보박스 값 호출
-this.fn_setItemCbo() = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+this.fn_setItemCbo = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 {
-	alert("나와");
 	// trace("주문상품 콤포박스 세팅");
 	// 주문 상품의 경우 프론트에서 별도로 전송해줘야할 값이 없다.
 	// 서버에서 보내준 값만 받아서 주문상품 콤보박스에 바인딩만 하면된다.
@@ -86,10 +85,60 @@ this.fn_setItemCbo() = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 						outData ,
 						strArg ,
 						callBackFnc ) // 세팅한 값들을 담아 서버로 데이터 전송
-						 
+					 
 };
+
+this.btn_regOrd_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
+{
+ 	 alert("주문 등록 버튼 클릭");
+	 // 1. 주문등록을 위해 입력받은 6개의 값을 데이터셋에 담아 서버로 전송
+	 
+	 this.ds_regOrd.clearData();
+	 this.ds_regOrd.addRow();
+	 this.ds_regOrd.setColumn(0,"CUST_GBCD",this.cbo_custGbNm.value);
+	 this.ds_regOrd.setColumn(0,"CUST_NM",this.edt_custNm.value);
+	 this.ds_regOrd.setColumn(0,"PHONE",this.edt_phone.value);
+	 this.ds_regOrd.setColumn(0,"BIR_BIZ_NO",this.edt_birBizNo.value);
+	 this.ds_regOrd.setColumn(0,"ADDR",this.edt_addr.value);
+	 this.ds_regOrd.setColumn(0,"ITEM_CD",this.cbo_itemNm.value);
+	 
+	 trace(this.ds_regOrd.getColumn(0,"CUST_NM"));
+	 trace(this.ds_regOrd.getColumn(0,"PHONE"));
+	 trace(this.ds_regOrd.getColumn(0,"BIR_BIZ_NO"));
+	 trace(this.ds_regOrd.getColumn(0,"ADDR"));
+	 trace(this.ds_regOrd.getColumn(0,"CUST_GBCD"));
+	 trace(this.ds_regOrd.getColumn(0,"ITEM_CD"));
+	 
+ 	// return 0;
+// 	 var oArg = {}; // 팝업을 열 때 부모창에서 가져갈 데이터가 있다면 데이터 세팅
+// 					// 주문등록시에는 가져갈 데이터가 없으므로 공란으로 지정
+// 					// ex) paramTitle:"가나다라", paramCode:"abcd", paramNum:12345
+//      var oOption = {}; 	// top, left를 지정하지 않으면 가운데 정렬 // "top=20, left=370"
+// 	 var sPopupCallBack = "fnPopupCallback"; // 팝업창을 닫았을 때 후처리 로직 작성하기 위한 callBack함수 지정
+// 	 this.gfnOpenPopup("popup","Board::OB_001_01.xfdl",oArg,sPopupCallBack,oOption); // 팝업으로 띄울 화면 지정 후 팝업open
+
+	// 2. 세팅한 값을 서버로 전송
+	var strSvcId = "insertOrdList";
+	var strSvcUrl = "insertOrdList.do";
+	var inData = "ds_regOrd=ds_regOrd";
+	var outData = ""; // 서버에서 받는 return값 없음
+	var strArg = "";
+	var callBackFnc = "fnCallback";
+	
+	this.gfnTransaction( strSvcId , 
+						 strSvcUrl ,
+						 inData ,
+						 outData ,
+						 strArg ,
+						 callBackFnc);
+};
+
 this.fnCallback = function(svcID, errorCode, errorMsg)
 {
+	if(errorCode < 0){
+		alert("작업 실패 에러 코드 : " + errorCode);
+		return 0;
+	}
 	switch(svcID)
 	{
 		case "selectCommonCode":
@@ -98,25 +147,18 @@ this.fnCallback = function(svcID, errorCode, errorMsg)
 		case "selectItemList":
 			trace("주문상품 콤보박스 세팅완료");
 			break;
+		case "insertOrdList":
+			alert("주문 등록 완료");
+			this.close(); // 팝업 닫기
+			break;
 	}
 };
 
 
-this.btn_regOrd_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
-{
-	 alert("주문 등록 버튼 클릭");
-	
-	 var oArg = {}; // 팝업을 열 때 부모창에서 가져갈 데이터가 있다면 데이터 세팅
-					// 주문등록시에는 가져갈 데이터가 없으므로 공란으로 지정
-					// ex) paramTitle:"가나다라", paramCode:"abcd", paramNum:12345
-     var oOption = {}; 	// top, left를 지정하지 않으면 가운데 정렬 // "top=20, left=370"
-	 var sPopupCallBack = "fnPopupCallback"; // 팝업창을 닫았을 때 후처리 로직 작성하기 위한 callBack함수 지정
-	 this.gfnOpenPopup("popup","Board::OB_001_01.xfdl",oArg,sPopupCallBack,oOption); // 팝업으로 띄울 화면 지정 후 팝업open
-};
-
 this.btn_exit_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 {
 	 alert("닫기 버튼 클릭");
+	 this.close(); 
 };
 
 
@@ -139,6 +181,16 @@ this.btn_exit_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
         <ColumnInfo>
           <Column id="CD_VAL1" type="STRING" size="256"/>
           <Column id="CD_NM1" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="ds_regOrd">
+        <ColumnInfo>
+          <Column id="CUST_GBCD" type="STRING" size="256"/>
+          <Column id="CUST_NM" type="STRING" size="256"/>
+          <Column id="PHONE" type="STRING" size="256"/>
+          <Column id="BIR_BIZ_NO" type="STRING" size="256"/>
+          <Column id="ADDR" type="STRING" size="256"/>
+          <Column id="ITEM_CD" type="STRING" size="256"/>
         </ColumnInfo>
       </Dataset>
     </Objects>

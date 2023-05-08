@@ -194,9 +194,8 @@
         };
 
         // 주문 상품 콤보박스 값 호출
-        this.fn_setItemCbo() = function(obj,e)
+        this.fn_setItemCbo = function(obj,e)
         {
-        	alert("나와");
         	// trace("주문상품 콤포박스 세팅");
         	// 주문 상품의 경우 프론트에서 별도로 전송해줘야할 값이 없다.
         	// 서버에서 보내준 값만 받아서 주문상품 콤보박스에 바인딩만 하면된다.
@@ -216,19 +215,6 @@
         						callBackFnc ) // 세팅한 값들을 담아 서버로 데이터 전송
 
         };
-        this.fnCallback = function(svcID, errorCode, errorMsg)
-        {
-        	switch(svcID)
-        	{
-        		case "selectCommonCode":
-        			trace("고객구분 콤보박스 세팅 완료");
-        			break;
-        		case "selectItemList":
-        			trace("주문상품 콤보박스 세팅완료");
-        			break;
-        	}
-        };
-
 
         this.btn_regOrd_onclick = function(obj,e)
         {
@@ -240,11 +226,49 @@
              var oOption = {}; 	// top, left를 지정하지 않으면 가운데 정렬 // "top=20, left=370"
         	 var sPopupCallBack = "fnPopupCallback"; // 팝업창을 닫았을 때 후처리 로직 작성하기 위한 callBack함수 지정
         	 this.gfnOpenPopup("popup","Board::OB_001_01.xfdl",oArg,sPopupCallBack,oOption); // 팝업으로 띄울 화면 지정 후 팝업open
+
+        	// 2. 세팅한 값을 서버로 전송
+        	var strSvcId = "insertOrdList";
+        	var strSvcUrl = "insertOrdList.do";
+        	var inData = "ds_regOrd=ds_regOrd";
+        	var outData = ""; // 서버에서 받는 return값 없음
+        	var strArg = "";
+        	var callBackFnc = "fnCallback";
+
+        	this.gfnTransaction( strSvcId ,
+        						 strSvcUrl ,
+        						 inData ,
+        						 outData ,
+        						 strArg ,
+        						 callBackFnc);
         };
+
+        this.fnCallback = function(svcID, errorCode, errorMsg)
+        {
+        	if(errorCode < 0){
+        		alert("작업 실패 에러 코드 : " + errorCode);
+        		return 0;
+        	}
+        	switch(svcID)
+        	{
+        		case "selectCommonCode":
+        			trace("고객구분 콤보박스 세팅 완료");
+        			break;
+        		case "selectItemList":
+        			trace("주문상품 콤보박스 세팅완료");
+        			break;
+        		case "insertOrdList":
+        			alert("주문 등록 완료");
+        			this.close(); // 팝업 닫기
+        			break;
+        	}
+        };
+
 
         this.btn_exit_onclick = function(obj,e)
         {
         	 alert("닫기 버튼 클릭");
+        	 this.close();
         };
 
 

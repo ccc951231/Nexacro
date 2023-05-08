@@ -50,7 +50,7 @@
     <Service prefixid="lib" type="js" cachelevel="session" url="./lib/" version="0" communicationversion="0" include_subdir="false"/>
     <Service prefixid="frame" type="form" url="./frame/" cachelevel="session" version="0" communicationversion="0" include_subdir="false"/>
     <Service prefixid="cmm" type="form" cachelevel="session" url="./cmm/" version="0" communicationversion="0" include_subdir="false"/>
-    <Service prefixid="svcurl" type="JSP" cachelevel="none" url="http://localhost:8080/orderBoard/" version="0" communicationversion="0" include_subdir="false"/>
+    <Service prefixid="svcurl" type="JSP" cachelevel="none" url="http://localhost:8087/orderBoard/" version="0" communicationversion="0" include_subdir="false"/>
     <Service prefixid="sample" type="form" cachelevel="session" url="./sample/" version="0" communicationversion="0" include_subdir="false"/>
     <Service prefixid="pattern" type="form" cachelevel="session" url="./pattern/" version="0" communicationversion="0" include_subdir="false"/>
     <Service prefixid="xcssrc" type="resource" url="./_resource_/_xcss_/" cachelevel="session" include_subdir="false"/>

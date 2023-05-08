@@ -10,7 +10,7 @@
             <HFrameSet id="HFrameSet" separatesize="240,*">
               <Frames>
                 <ChildFrame id="frameLeft" showtitlebar="false" showstatusbar="false" formurl="frame::frameLeft.xfdl" dragmovetype="none"/>
-                <ChildFrame id="frameWork" formurl=""/>
+                <ChildFrame id="frameWork" formurl="Board::OB_001.xfdl"/>
               </Frames>
             </HFrameSet>
             <ChildFrame id="frameBottom" showtitlebar="false" showstatusbar="false" formurl="frame::frameBottom.xfdl" showtitleicon="false" dragmovetype="none"/>

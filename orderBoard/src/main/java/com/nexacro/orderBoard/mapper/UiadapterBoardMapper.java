@@ -27,13 +27,15 @@ import com.nexacro.orderBoard.object.Board;
 @Mapper
 public interface UiadapterBoardMapper {
 	
-	public void insertOrd(Map<String, Object> ds_regOrd); // 신규 주문 Insert
+	public void deleteOrd(Map<String, Object> ds_delList);
 
-	public void insertCust(Map<String, Object> ds_regOrd); // 신규 고객 Insert
+	public void updateOrd(Map<String, Object> ds_updOrd);
+
+	public void insertOrd(Map<String,Object> ds_RegOrd); // 신규 주문 insert
 	
-	public String checkCustDup(Map<String, Object> checkCustDup); // 기존 고객 조회
-
-	public void insertOrdList(Map<String, Object> ds_regOrd); // 신규주문 Insert
+	public void insertCust(Map<String,Object> ds_regOrd); // 신규 고객 insert
+	
+	public String checkCustDup(Map<String,Object> checkCustDup); // 기존 고객 조회
 	
 	public ArrayList<Map<String, Object>> selectItemList();
 
@@ -56,7 +58,6 @@ public interface UiadapterBoardMapper {
 	public void update_board_map(Map<String, Object> board);
 
 	public void delete_board_map(Map<String, Object> board);
-
 
 
 

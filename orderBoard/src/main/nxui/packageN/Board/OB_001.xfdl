@@ -115,21 +115,7 @@ this.OB_001_onload = function(obj:nexacro.Form,e:nexacro.LoadEventInfo)
 					
 };
 
-// CallBack Function(서버수신)
-this.fnCallback = function(svcID, errorCode, errorMsg)
-{
-	 
-	switch(svcID)
-	{
-		case "selectCommonCode":
-			this.ds_ordStatCombo.insertRow(0); // 0번째 ROW에 라인 삽입 추가
-			this.ds_ordStatCombo.setColumn(0,"CD_VAL1",""); // 해당 ROW에 값 추가
-			this.ds_ordStatCombo.setColumn(0,"CD_NM1","전체");
-			alert(this.ds_ordStatCombo.CD_VAL1);
-			alert(this.ds_ordStatCombo.CD_NM1);
-			break;
-	}
-}
+
 
 this.btn_selectOrd_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 {
@@ -172,8 +158,7 @@ this.btn_selectOrd_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInf
 						 outData,
 						 strArg,
 						 callBackFnc);
-	alert(this.inData);
-	alert(this.gfnTransaction);
+
 };
 
 
@@ -192,34 +177,84 @@ this.btn_regOrd_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 this.btn_updOrd_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 {
 	alert("주문 수정 팝업 오픈");
+	// 그리드에서 현재 선택된 ROW의 ORD_NO 주문번호 가져오기
+	var ordNo = this.ds_list.getColumn(this.ds_list.rowposition,"ORD_NO");
+	var oArg = {ordNo:ordNo};
+	var oOption = {};
+	var sPopupCallBack = "fnPopupCallback";
+	this.gfnOpenPopup("popup","Board::OB_001_02.xfdl",oArg,sPopupCallBack,oOption);
+
 };
 
 
 this.btn_delOrd_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 {
 	alert("주문 삭제 진행");
-};
-
-this.grd_ordList_oncelldblclick = function(obj:nexacro.Grid,e:nexacro.GridClickEventInfo)
-{
-	// 그리드 더블 클릭시 진행할 스크립트 작성
-};
-
-this.chk_cmpYn_onchanged = function(obj:nexacro.CheckBox,e:nexacro.CheckBoxChangedEventInfo)
-{
-	alert("onchanged 함수 실행 완료");
-};
-
-
-this.cbo_ordStat_onitemchanged = function(obj:nexacro.Combo,e:nexacro.ItemChangeEventInfo)
-{
+	// 그리드에서 현재 선택된 ROW의 ORD_NO 주문번호를 가져온다.
+	var ordNo = this.ds_list.getColumn(this.ds_list.rowposition,"ORD_NO");
 	
+	// 서버로 전송하기 위한 데이터셋 셋팅
+	this.ds_delList.clearData();
+	this.ds_delList.addRow();
+	this.ds_delListl.setColumn(0,"ORD_NO",ordNo);
+	
+	// 서버로 deleteOrdList.do라는 URL 요청에 ds_delList값을 담아 전송
+	var strSvcId = "deleteOrdList";
+	var strSvcUrl = "deleteOrdList.do";
+	var inData = "ds_delList=DS_delList";
+	var outData = "";
+	var strArg = "";
+	var callBackFnc = "fnCallback";
+	
+	this.gfnTransaction( strSvcId,
+						 strSvcUrl,
+						 inData,
+						 outData,
+						 strArg,
+						 callBackFnc );
+	alert(ordNo);
 };
+
+// CallBack Function(서버수신)
+this.fnCallback = function(svcID, errorCode, errorMsg)
+{
+	switch(svcID)
+	{
+		case "selectCommonCode":
+			this.ds_ordStatCombo.insertRow(0); // 0번째 ROW에 라인 삽입 추가
+			this.ds_ordStatCombo.setColumn(0,"CD_VAL1",""); // 해당 ROW에 값 추가
+			this.ds_ordStatCombo.setColumn(0,"CD_NM1","전체");
+			alert(this.ds_ordStatCombo.CD_VAL1);
+			alert(this.ds_ordStatCombo.CD_NM1);
+			break;
+			
+		case "deleteOrdList":
+			alert("삭제 완료");
+			break;
+	}
+};
+// 
+// this.grd_ordList_oncelldblclick = function(obj:nexacro.Grid,e:nexacro.GridClickEventInfo)
+// {
+// 	// 그리드 더블 클릭시 진행할 스크립트 작성
+// };
+// 
+// this.chk_cmpYn_onchanged = function(obj:nexacro.CheckBox,e:nexacro.CheckBoxChangedEventInfo)
+// {
+// 	alert("onchanged 함수 실행 완료");
+// };
+
+
+
 
 ]]></Script>
     <Objects>
       <Dataset id="ds_searchCombo">
         <ColumnInfo>
+          <ConstColumn id="ConstColumn3" type="STRING" size="30"/>
+          <ConstColumn id="ConstColumn2" type="STRING" size="30"/>
+          <ConstColumn id="ConstColumn1" type="STRING" size="30"/>
+          <ConstColumn id="ConstColumn0" type="STRING" size="30"/>
           <Column id="CD_VAL" type="STRING" size="256"/>
         </ColumnInfo>
       </Dataset>
@@ -249,6 +284,11 @@ this.cbo_ordStat_onitemchanged = function(obj:nexacro.Combo,e:nexacro.ItemChange
           <Column id="ADDR" type="STRING" size="256"/>
           <Column id="ITEM_NM" type="STRING" size="256"/>
           <Column id="REG_DT" type="STRING" size="256"/>
+        </ColumnInfo>
+      </Dataset>
+      <Dataset id="ds_delList">
+        <ColumnInfo>
+          <Column id="ORD_NO" type="STRING" size="256"/>
         </ColumnInfo>
       </Dataset>
     </Objects>

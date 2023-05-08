@@ -61,12 +61,32 @@ public class UidapterBoardController {
 	 * </pre>
 	 */
 	
+	@RequestMapping(value = "/orderBoard/deleteOrdList.do")
+	public NexacroResult deleteOrdList(@ParamDataSet(name = "ds_delList") Map<String, Object> ds_delList) throws NexacroException{
+		
+		NexacroResult result = new NexacroResult();
+		uidapterSampleService.deleteOrdList(ds_delList);
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/orderBoard/updateOrdList.do")
+	public NexacroResult updateOrdList(@ParamDataSet(name = "ds_updOrd")Map<String, Object> ds_updOrd) throws NexacroException{
+		
+		NexacroResult result = new NexacroResult();
+		uidapterSampleService.updateOrdList(ds_updOrd);
+		
+		return result;
+	}
+	
 	@RequestMapping(value ="/orderBoard/insertOrdList.do")
 	public NexacroResult insertOrdList(@ParamDataSet(name = "ds_regOrd") Map<String,Object> ds_regOrd) throws NexacroException{
-		
-		System.out.println("주문등록 :" + ds_regOrd);
-		NexacroResult result = new NexacroResult(); // return값 세팅할 객체 생성
+	
+		System.out.println("주문등록1 : " + ds_regOrd);
+		NexacroResult result = new NexacroResult(); // 
 		uidapterSampleService.insertOrdList(ds_regOrd);
+		System.out.println("주문등록2 : " + ds_regOrd);
+		
 		return result;
 	}
 	

@@ -34,31 +34,41 @@ import com.nexacro.java.xapi.data.DataSet;
 
 @Service
 public class UidapterBoardServiceImpl implements UidapterBoardService {
-
-
+	
+	
 	@Autowired
 	private SqlSessionTemplate sqlSession;
+
+	
+	@Override
+	public void deleteOrdList(Map<String, Object> ds_delList) {
+
+		UiadapterBoardMapper mapper = sqlSession.getMapper(UiadapterBoardMapper.class);
+		// 주문 삭제
+		mapper.deleteOrd(ds_delList);
+	}
+	
+	@Override
+	public void updateOrdList(Map<String, Object> ds_updOrd) {
+
+		UiadapterBoardMapper mapper = sqlSession.getMapper(UiadapterBoardMapper.class);
+		mapper.updateOrd(ds_updOrd);
+		
+	}
 	
 	@Override
 	public void insertOrdList(Map<String, Object> ds_regOrd) {
 		
 		UiadapterBoardMapper mapper = sqlSession.getMapper(UiadapterBoardMapper.class);
-		// 기존 고객이 TB_CUST(고객 테이블)에 있는 경우
-		// 신규 고객인 경우
-		// 고객명, 휴대폰 번호, 사업자, 주소가 모두 일치하는 고객코드가 있을 때
-		// Insert하지 않고, 없는 경우만 Insert하도록 비즈니스 로직 구성하기.
-	
 		String custCode = mapper.checkCustDup(ds_regOrd);
 		ds_regOrd.put("CUST_CD", custCode);
 		if("".equals(custCode) || custCode == null) {
-			// 신규 고객 등록
 			mapper.insertCust(ds_regOrd);
-			custCode = mapper.checkCustDup(ds_regOrd); // 다시 고객번호 조회 후 데이터 셋에 넣기
-			ds_regOrd.put("CUST_CD", custCode); // 데이터셋에 CUST_CD는 없으므로 map에 put하여 고객번호 정보를 담는다.
+			custCode = mapper.checkCustDup(ds_regOrd);
+			ds_regOrd.put("CUST_CD", custCode);
 		}else {
-			// 기존 고객이므로 insert필요없음
+		
 		}
-		// 주문 등록
 		mapper.insertOrd(ds_regOrd);
 	}
 
@@ -132,8 +142,6 @@ public class UidapterBoardServiceImpl implements UidapterBoardService {
 			}
 		}
 	}
-
-
 
 
 
